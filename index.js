@@ -5,6 +5,7 @@ import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session/index.js";
 import ThirdParty from "supertokens-node/recipe/thirdparty/index.js";
 import { middleware, errorHandler } from "supertokens-node/framework/express/index.js";
+import { verifySession } from "supertokens-node/recipe/session/framework/express/index.js";
 
 // ─── Validate Required Env Vars ─────────────────────────────────────
 const required = [
@@ -82,7 +83,7 @@ app.get("/health", (req, res) => {
 });
 
 // Example: protected route — returns user info if logged in
-app.get("/me", Session.verifySession(), (req, res) => {
+app.get("/me", verifySession(), (req, res) => {
     const session = req.session;
     res.json({
         userId: session.getUserId(),
@@ -94,7 +95,7 @@ app.get("/me", Session.verifySession(), (req, res) => {
 app.use(errorHandler());
 
 // ─── Start ──────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`✓ Auth backend running on port ${PORT}`);
     console.log(`  API domain:     ${process.env.API_DOMAIN}`);
