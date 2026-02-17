@@ -6,6 +6,22 @@ import Session from "supertokens-node/recipe/session/index.js";
 import ThirdParty from "supertokens-node/recipe/thirdparty/index.js";
 import { middleware, errorHandler } from "supertokens-node/framework/express/index.js";
 
+// ─── Validate Required Env Vars ─────────────────────────────────────
+const required = [
+    "SUPERTOKENS_CONNECTION_URI",
+    "API_DOMAIN",
+    "WEBSITE_DOMAIN",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+];
+const missing = required.filter((k) => !process.env[k]);
+if (missing.length > 0) {
+    console.error("❌ Missing required environment variables:");
+    missing.forEach((k) => console.error(`   - ${k}`));
+    console.error("\nSet them in Coolify env vars or in a .env file.");
+    process.exit(1);
+}
+
 // ─── SuperTokens Init ───────────────────────────────────────────────
 supertokens.init({
     framework: "express",
