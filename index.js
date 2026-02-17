@@ -67,10 +67,19 @@ app.use(
     cors({
         origin: process.env.WEBSITE_DOMAIN,
         allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
-        methods: ["GET", "PUT", "POST", "DELETE"],
+        methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
         credentials: true,
     })
 );
+
+// Explicit preflight handler — ensures OPTIONS always returns proper CORS headers
+// (some reverse proxies like Traefik/Coolify can interfere with automatic handling)
+app.options("*", cors({
+    origin: process.env.WEBSITE_DOMAIN,
+    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
+    methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+    credentials: true,
+}));
 
 // SuperTokens middleware handles all /auth/* routes automatically
 app.use(middleware());
